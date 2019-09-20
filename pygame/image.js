@@ -3,9 +3,18 @@ var $builtinmodule = function (name) {
     mod.load = new Sk.builtin.func(function (filename) {
 
         function imageExists(imageUrl) {
-            var imgObj=new Image();
-            imgObj.src= imageUrl;
-            return (imgObj.fileSize > 0 || (imgObj.width > 0 && imgObj.height > 0))
+            var image = new Image();
+
+            image.src = imageUrl;
+
+            if (!image.complete) {
+                return false;
+            }
+            else if (image.height === 0) {
+                return false;
+            }
+
+            return true;
         }
 
         if (imageExists(Sk.imgPath + Sk.ffi.remapToJs(filename))) {
