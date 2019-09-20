@@ -12,7 +12,7 @@ var $builtinmodule = function (name) {
         if (imageExists(Sk.imgPath + Sk.ffi.remapToJs(filename))) {
             return Sk.misceval.promiseToSuspension(new Promise(function (resolve) {
                 var img = new Image();
-                img.crossOrigin='';
+                // img.crossOrigin='';
                 img.src = Sk.imgPath + Sk.ffi.remapToJs(filename);
                 img.onload = function () {
                     var t = Sk.builtin.tuple([img.width, img.height]);
