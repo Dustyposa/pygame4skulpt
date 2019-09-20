@@ -127,6 +127,7 @@ function renderFont(self, text, antialias, color, background) {
         italicPyStr = new Sk.builtin.str('italic'),
         underlinePyStr = new Sk.builtin.str('underline');
     var msg = Sk.ffi.remapToJs(text);
+    var antialiasBool = Sk.ffi.remapToJs(antialias);
     var STRETCH_CONST = 1;
     const realFontSize = 0.64;
     var h = STRETCH_CONST * Sk.ffi.remapToJs(Sk.abstr.gattr(self, szPyStr, false));
@@ -168,6 +169,7 @@ function renderFont(self, text, antialias, color, background) {
     var color_js = PygameLib.extract_color(color);
     ctx.fillStyle = 'rgba(' + color_js[0] + ', ' + color_js[1] + ', ' + color_js[2] + ', ' + color_js[3] + ')';
     ctx.fillText(msg, 0, 1 / (STRETCH_CONST + 0.2) * h * realFontSize);
+    ctx.imageSmoothingEnabled = true;
     if (underline) {
         ctx.strokeStyle = 'rgba(' + color_js[0] + ', ' + color_js[1] + ', ' + color_js[2] + ', ' + color_js[3] + ')';
         ctx.lineWidth = 1;

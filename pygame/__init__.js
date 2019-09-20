@@ -1236,7 +1236,6 @@ var init$1 = function $__init__123$(self, size, fullscreen = false, main = true)
 function fillBlack(ctx, w, h, main = false) {
     ctx.beginPath();
     ctx.rect(0, 0, w, h);
-    console.log("main:", main);
     if (main){
         ctx.fillStyle = "black";
     } else {
