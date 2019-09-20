@@ -2,17 +2,15 @@ var $builtinmodule = function (name) {
     mod = {};
     mod.load = new Sk.builtin.func(function (filename) {
         function imageExists(imageUrl) {
-            return true;
-            // var http = new XMLHttpRequest();
-            // http.open('HEAD', imageUrl, false);
-            // http.send();
-            // return http.status === 200;
+            var http = new XMLHttpRequest();
+            http.open('HEAD', imageUrl, false);
+            http.send();
+            return http.status === 200;
         }
 
         if (imageExists(Sk.imgPath + Sk.ffi.remapToJs(filename))) {
             return Sk.misceval.promiseToSuspension(new Promise(function (resolve) {
                 var img = new Image();
-                // img.crossOrigin='';
                 img.src = Sk.imgPath + Sk.ffi.remapToJs(filename);
                 img.onload = function () {
                     var t = Sk.builtin.tuple([img.width, img.height]);
