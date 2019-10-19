@@ -1,9 +1,10 @@
 <html>
 <head>
-<!--    <script src="./skulpt_dist/skulpt.min.js" type="text/javascript"></script>-->
+    <!--    <script src="./skulpt_dist/skulpt.min.js" type="text/javascript"></script>-->
     <meta charset="UTF-8">
-    <script src="./skulpt_dist/skulpt.js" type="text/javascript"></script>
-    <script src="./skulpt_dist/skulpt-stdlib.js" type="text/javascript"></script>
+    <script src="./skulpt_dist_min/skulpt.js" type="text/javascript"></script>
+    <script src="./skulpt_dist_min/skulpt-stdlib.js" type="text/javascript"></script>
+    <script src="./skulpt_dist_min/SkErrorThanslation.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
           integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -55,7 +56,10 @@
         </div>
     </div>
     <div class="col-md-5"></div>
-
+    <textarea id="good.py">
+if 1:
+	if 1:
+		print("qwe")</textarea>
 </div>
 <div class="col-md-2"></div>
 <script src="./js/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -75,6 +79,7 @@
 <script>
     $(function () {
         // const basePath = './pygame_dist/';
+        Sk.builtin.BaseException.prototype.tp$str = skErrorTrans;
         const basePath = './pygame/';
         const externalLibs = {
             './pygame.js': {
@@ -229,7 +234,14 @@
         }
 
         function builtinRead(filename) {
-            if (filename in externalLibs) {
+            console.log("filename:", filename);
+            if (filename.search(/\w+.py/) !== -1) {
+                const tmpList = filename.split("/");
+                const domId = tmpList[tmpList.length - 1];
+                console.log("domId:", domId);
+                const domData = document.getElementById(domId);
+                return domData.value;
+            } else if (filename in externalLibs) {
                 const tmpPath = externalLibs[filename]["path"];
                 if (filename === "./pygame.js" || filename === "sprite.py") {
                     return Sk.misceval.promiseToSuspension(
@@ -327,6 +339,7 @@
             Sk.imgPath = "";
             Sk.hardInterrupt = false;
             Sk.main_canvas = document.createElement("canvas");
+            Sk.keepModuleName = true;
             Sk.builtin.KeyboardInterrupt = function (args) {
                 var o;
                 if (!(this instanceof Sk.builtin.KeyboardInterrupt)) {
@@ -337,6 +350,7 @@
                 Sk.builtin.BaseException.apply(this, arguments);
             };
             Sk.abstr.setUpInheritance("KeyboardInterrupt", Sk.builtin.KeyboardInterrupt, Sk.builtin.BaseException);
+            Sk.inBrowser = true;
             Sk.configure({
                 killableWhile: killWhileAndForBool,
                 killableFor: killWhileAndForBool,
@@ -359,9 +373,9 @@
                     console.log("success")
                 },
                 function (err) {
-                    if (err.tp$name === "KeyboardInterrupt"){
+                    if (err.tp$name === "KeyboardInterrupt") {
                         return null;
-                    }else {
+                    } else {
                         alert(err.toString())
                     }
                 })
