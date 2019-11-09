@@ -3,12 +3,12 @@ import fileinput
 import token
 import tokenize
 from pathlib import Path
-from typing import NoReturn, Union
+from typing import Union
 
 dist_path = Path("./pygame_dist")
 
 
-def main() -> NoReturn:
+def main() -> None:
     """
     compress all js file
     :return:
@@ -33,7 +33,7 @@ def main() -> NoReturn:
                 print(f"Permission denied, please try again: {file.as_posix()}")
 
 
-def compress_js(file: Path) -> NoReturn:
+def compress_js(file: Path) -> None:
     """
     now compress
     babel --> make es6 -> es5
@@ -52,7 +52,7 @@ def compress_js(file: Path) -> NoReturn:
     os.system(compress_cmd)
 
 
-def remove_file_comment(fname: Union[str, Path], r_fname: Union[str, Path]) -> NoReturn:
+def remove_file_comment(fname: Union[str, Path], r_fname: Union[str, Path]) -> None:
     """ Run on just one file.
 
     """

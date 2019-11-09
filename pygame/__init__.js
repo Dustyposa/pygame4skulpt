@@ -1121,19 +1121,16 @@ function pygame_init() {
 
 var mouseEventListener = function (event) {
 
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
     var canvasX = 0;
     var canvasY = 0;
     var currentElement = this;
+    const rect = this.getBoundingClientRect();
+
     do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+        canvasX = event.clientX - rect.left * (this.width / rect.width);
+        canvasY = event.clientY - rect.top * (this.height / rect.height);
     }
     while (currentElement === currentElement.offsetParent);
-
-    canvasX = event.clientX - totalOffsetX;
-    canvasY = event.clientY - totalOffsetY;
 
     var button = event.button;
     if (event.type === "mousedown") {

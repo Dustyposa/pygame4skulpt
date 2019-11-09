@@ -279,7 +279,9 @@ if 1:
             btn1.appendChild(ic);
 
             $(btn1).on('click', function (e) {
-                Sk.insertEvent("quit");
+                // Sk.insertEvent("quit");
+                console.log("button click");
+                Sk.hardInterrupt = true;
             });
 
             var div2 = document.createElement("div");
@@ -339,6 +341,7 @@ if 1:
             Sk.imgPath = "";
             Sk.hardInterrupt = false;
             Sk.main_canvas = document.createElement("canvas");
+            Sk.main_canvas.id = "pygame_main";
             Sk.keepModuleName = true;
             Sk.builtin.KeyboardInterrupt = function (args) {
                 var o;

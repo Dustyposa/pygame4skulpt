@@ -16,6 +16,9 @@ var $builtinmodule = function (name) {
     });
     mod.set_mode = new Sk.builtin.func(function (size, flags) {
         var f = 0;
+        if (!Sk.builtin.checkSequence(size)) {
+            throw Sk.builtin.TypeError("argument 1 must be 2-item sequence, not " + Sk.abstr.typeName(size))
+        }
         if (flags !== undefined) {
             f = Sk.ffi.remapToJs(flags);
         }
