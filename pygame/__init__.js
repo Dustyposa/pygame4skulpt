@@ -30,7 +30,9 @@ var PygameLib = {},
     topPyStr = new Sk.builtin.str("top"),
     widthPyStr = new Sk.builtin.str("width"),
     heightPyStr = new Sk.builtin.str("height"),
-    lenPyStr = new Sk.builtin.str("len");
+    lenPyStr = new Sk.builtin.str("len"),
+    topleftPyStr = new Sk.builtin.str("topleft"),
+    sizePyStr = new Sk.builtin.str("size");
 
 PygameLib.running = false;
 
@@ -1640,14 +1642,24 @@ function color_type_f($gbl, $loc) {
     $loc.__len__ = new Sk.builtin.func(function (self) {
         return Sk.abstr.gattr(self, lenPyStr, false);
     })
-};
+}
 
 //pygame.Rect
 function rect_type_f($gbl, $loc) {
     //Rect(Surface, color, Rect, width=0) -> Rect
     //Rect((left, top), (width, height)) -> Rect
     $loc.__init__ = new Sk.builtin.func(function (self, a, b, c, d) {
-        Sk.builtin.pyCheckArgs('__init__', arguments, 3, 5, false, false);
+        // debugger;
+        if (arguments.length === 2 && Sk.abstr.typeName(a) === "Rect") {
+            const [left, top] = Sk.ffi.remapToJs(Sk.abstr.gattr(a, topleftPyStr, false), false);
+            const [width, height] = Sk.ffi.remapToJs(Sk.abstr.gattr(a, sizePyStr, false), false);
+            Sk.abstr.sattr(self, leftPyStr, Sk.ffi.remapToPy(left), false);
+            Sk.abstr.sattr(self, topPyStr, Sk.ffi.remapToPy(top), false);
+            Sk.abstr.sattr(self, widthPyStr, Sk.ffi.remapToPy(width), false);
+            Sk.abstr.sattr(self, heightPyStr, Sk.ffi.remapToPy(height), false);
+            return Sk.builtin.none.none$;
+        }
+        Sk.builtin.pyCheckArgs('__init__', arguments, 2, 5, false, false);
 
         if (Sk.abstr.typeName(a) === "tuple" && Sk.abstr.typeName(b) === "tuple") {
             if (c !== undefined || d !== undefined) {
@@ -1814,8 +1826,8 @@ function rect_type_f($gbl, $loc) {
     });
     var topright_setter = new Sk.builtin.func(function (self, val) {
         var tr = Sk.ffi.remapToJs(val);
-        set_top(self, tr[0]);
-        set_right(self, tr[1]);
+        set_top(self, tr[1]);
+        set_right(self, tr[0]);
     });
     $loc.topright = Sk.misceval.callsimOrSuspend(Sk.builtins.property, topright_getter, topright_setter);
 
@@ -1890,7 +1902,7 @@ function rect_type_f($gbl, $loc) {
     var centery_getter = new Sk.builtin.func(function (self) {
         return Sk.ffi.remapToPy(get_centery(self));
     });
-    var centery_setter = new Sk.builtin.func(function (self) {
+    var centery_setter = new Sk.builtin.func(function (self, val) {
         set_centery(self, Sk.ffi.remapToPy(val));
     });
     $loc.centery = Sk.misceval.callsimOrSuspend(Sk.builtins.property, centery_getter, centery_setter);
@@ -2220,8 +2232,8 @@ function rect_type_f($gbl, $loc) {
         var selfy = get_top(self);
         var selfw = get_width(self);
         var selfh = get_height(self);
-        return (selfx < argx + argw && selfy < argy + argh &&
-            selfx + selfw > argx && selfy + selfh > argy);
+        return (selfx < (argx + argw) && selfy < (argy + argh) &&
+            (selfx + selfw) > argx && (selfy + selfh) > argy);
     }
 
     $loc.colliderect = new Sk.builtin.func(function (self, argrect) {

@@ -226,6 +226,7 @@ if 1:
             var output = document.getElementById("output");
             text = text.replace(/</g, '&lt;');
             output.innerHTML = output.innerHTML + text;
+            console.log(">>> ", text)
         }
 
         function clearOutput() {
@@ -235,19 +236,19 @@ if 1:
 
         function builtinRead(filename) {
             console.log("filename:", filename);
-            if (filename.search(/\w+.py/) !== -1) {
-                const tmpList = filename.split("/");
-                const domId = tmpList[tmpList.length - 1];
-                console.log("domId:", domId);
-                const domData = document.getElementById(domId);
-                return domData.value;
-            } else if (filename in externalLibs) {
+            if (filename in externalLibs) {
                 const tmpPath = externalLibs[filename]["path"];
+                console.log('filename1111:', filename);
                 if (filename === "./pygame.js" || filename === "sprite.py") {
                     return Sk.misceval.promiseToSuspension(
                         fetch(tmpPath)
                             .then(r => r.text()))
-
+                } else if (filename.search(/\w+.py/) !== -1) {
+                    const tmpList = filename.split("/");
+                    const domId = tmpList[tmpList.length - 1];
+                    console.log("domId:", domId);
+                    const domData = document.getElementById(domId);
+                    return domData.value;
                 } else {
                     let request = new XMLHttpRequest();
                     request.open("GET", tmpPath, false);
