@@ -1,47 +1,3 @@
-let ErrorRePattern = {
-    NameError_Pattern: /'.*?'/g,
-    SyntaxError_Pattern: /print\(.*?\)/g,
-    KeyboardInterrupt_Pattern: /print\(.*?\)/g,
-    StopIteration_Pattern: /print\(.*?\)/g,
-    GeneratorExit_Pattern: /print\(.*?\)/g,
-    StandardError_Pattern: /print\(.*?\)/g,
-    ArithmeticError_Pattern: /print\(.*?\)/g,
-    FloatingPointError_Pattern: /print\(.*?\)/g,
-    OverflowError_Pattern: /print\(.*?\)/g,
-    ZeroDivisionError_Pattern: /print\(.*?\)/g,
-    AssertionError_Pattern: /print\(.*?\)/g,
-    AttributeError_Pattern: /'.*?'/g,
-    EOFError_Pattern: /print\(.*?\)/g,
-    EnvironmentError_Pattern: /print\(.*?\)/g,
-    IOError_Pattern: /print\(.*?\)/g,
-    OSError_Pattern: /print\(.*?\)/g,
-    WindowsError_Pattern: /print\(.*?\)/g,
-    ImportError_Pattern: /print\(.*?\)/g,
-    LookupError_Pattern: /print\(.*?\)/g,
-    IndexError_Pattern: /print\(.*?\)/g,
-    MemoryError_Pattern: /print\(.*?\)/g,
-    UnboundLocalError_Pattern: /print\(.*?\)/g,
-    ReferenceError_Pattern: /print\(.*?\)/g,
-    RuntimeError_Pattern: /print\(.*?\)/g,
-    NotImplementedError_Pattern: /print\(.*?\)/g,
-    IndentationError_Pattern: /print\(.*?\)/g,
-    TabError_Pattern: '',
-    SystemError_Pattern: /print\(.*?\)/g,
-    TypeError_Pattern: '', //  # TypeError
-    ValueError_Pattern: '',
-    UnicodeError_Pattern: /print\(.*?\)/g,
-    UnicodeDecodeError_Pattern: /print\(.*?\)/g,
-    UnicodeTranslateError_Pattern: /print\(.*?\)/g,
-    Warning_Pattern: /print\(.*?\)/g,
-    DeprecationWarning_Pattern: /print\(.*?\)/g,
-    FutureWarning_Pattern: /print\(.*?\)/g,
-    OverflowWarning_Pattern: /print\(.*?\)/g,
-    PendingDeprecationWarning_Pattern: /print\(.*?\)/g,
-    RuntimeWarning_Pattern: /print\(.*?\)/g,
-    SyntaxWarning_Pattern: /print\(.*?\)/g,
-    UserWarning_Pattern: /print\(.*?\)/g,
-}
-
 const NameErrorDict = {
     'is not defined': {
         re_pattern: /name '(.*)' is not defined/i,
@@ -81,7 +37,17 @@ const SyntaxErrorDict = {
     'invalid character in identifier': {
         re_pattern: /invalid character( )in identifier/i,
         trans_msg: '代码中标识符出现了无效字符。'
-    }
+    },
+    "can't use starred expression here": {
+        re_pattern: /can't use starred( )expression here/i,
+        trans_msg: '此处不能用星号表达式。'
+    },
+    "EOF while scanning triple-quoted string literal": {
+        re_pattern: /EOF while scanning triple-quoted( )string literal/i,
+        trans_msg: '三引号字符串有问题，再检查一下。'
+    },
+
+
 }
 
 const KeyboardInterruptDict = {
@@ -212,16 +178,16 @@ const ReferenceErrorDict = {
 }
 
 const RuntimeErrorDict = {
-    'name  is not defined': {
-        re_pattern: /name '(.*)' is not defined/i,
-        trans_msg: '变量名 %s 未被定义。'
+    'Expected 2 tuples or 4 ints as input': {
+        re_pattern: /Expected 2( )tuples or 4 ints as input/i,
+        trans_msg: '期望参数类型为 2个 元组 或者 4 个 整数类型。'
     }
 }
 
 const NotImplementedErrorDict = {
-    'name  is not defined': {
-        re_pattern: /name '(.*)' is not defined/i,
-        trans_msg: '变量名 %s 未被定义。'
+    'Not yet implemented': {
+        re_pattern: /Not yet( )implemented/i,
+        trans_msg: '尚未实现'
     }
 }
 
@@ -266,7 +232,55 @@ const TypeErrorDict = {
     'is an invalid keyword argument for': {
         re_pattern: /'(.*?)' is an invalid keyword argument for (.*)/i,
         trans_msg: '\'%s\' 对 %s 来说不是一个有效的关键词参数。'
-    }
+    },
+    'the second argument must be a Pygame color': {
+        re_pattern: /the second argument must be a Pygame( )color/i,
+        trans_msg: '第二个参数需要是一个 Pygame color 类型。'
+    },
+    'Argument must be rect style object': {
+        re_pattern: /Argument must be rect style( )object/i,
+        trans_msg: '参数必须为一个 Rect 类型'
+    },
+    'argument must contain two numbers': {
+        re_pattern: /argument must contain( )two numbers/i,
+        trans_msg: '参数需要包含两个数字'
+    },
+    'Argument must be a sequence of rectstyle objects.': {
+        re_pattern: /Argument must be a sequence of( )rectstyle objects./i,
+        trans_msg: '参数需要为一个全为 Rect 对象的序列。'
+    },
+    'argument 1 must be 2-item sequence, not ': {
+        re_pattern: /argument 1 must be 2-item sequence, not (.*)/i,
+        trans_msg: '第一个参数必须为有两个数据的序列，而不是 %s。'
+    },
+    'invalid position argument for ': {
+        re_pattern: /invalid position argument for (.*)/i,
+        trans_msg: '对 %s 来说是无效的位置参数。'
+    },
+    'Wrong arguments': {
+        re_pattern: /Wrong( )arguments/i,
+        trans_msg: '参数错误'
+    },
+    'the first argument must be a pair': {
+        re_pattern: /the first( )argument must be a pair/i,
+        trans_msg: '第一个参数必须为有两个值的列表或者元组'
+    },
+    'argument must be a pair': {
+        re_pattern: /argument( )must be a pair/i,
+        trans_msg: '参数必须为有两个值的列表或者元组'
+    },
+    '\' object is not iterable': {
+        re_pattern: /'(.*)' object is not iterable/i,
+        trans_msg: '%s 对象不能迭代， 必须是一个可迭代对象。'
+    },
+    'argument must be str, not int': {
+        re_pattern: /(.*) argument must be str, not int/i,
+        trans_msg: '%s 的参数必须为字符串，而不是整型。'
+    },
+    'not supported between instances of': {
+        re_pattern: /'(.*?)' not supported between instances of '(.*?)' and '(.*?)'/i,
+        trans_msg: '%s不支持在%s和%s之间进行比较。'
+    },
 }
 
 const ValueErrorDict = {
@@ -354,183 +368,150 @@ const UserWarningDict = {
 }
 
 const TRANSLATION_DICT = {
-    NameError: ['名称错误', NameErrorDict, ErrorRePattern.NameError_Pattern],
+    NameError: ['名称错误', NameErrorDict],
     SyntaxError: [
         '语法错误',
-        SyntaxErrorDict,
-        ErrorRePattern.SyntaxError_Pattern
+        SyntaxErrorDict
     ],
     KeyboardInterrupt: [
         '用户中断程序',
-        KeyboardInterruptDict,
-        ErrorRePattern.KeyboardInterrupt_Pattern
+        KeyboardInterruptDict
     ],
     StopIteration: [
         '迭代器没有更多的值',
-        StopIterationDict,
-        ErrorRePattern.StopIteration_Pattern
+        StopIterationDict
     ],
     GeneratorExit: [
         '生成器发生异常',
-        GeneratorExitDict,
-        ErrorRePattern.GeneratorExit_Pattern
+        GeneratorExitDict
     ],
     StandardError: [
         '内建异常',
-        StandardErrorDict,
-        ErrorRePattern.StandardError_Pattern
+        StandardErrorDict
     ],
     ArithmeticError: [
         '数值计算错误',
-        ArithmeticErrorDict,
-        ErrorRePattern.ArithmeticError_Pattern
+        ArithmeticErrorDict
     ],
     FloatingPointError: [
         '浮点计算错误',
-        FloatingPointErrorDict,
-        ErrorRePattern.FloatingPointError_Pattern
+        FloatingPointErrorDict
     ],
     OverflowError: [
         '数值运算超出最大限制',
-        OverflowErrorDict,
-        ErrorRePattern.OverflowError_Pattern
+        OverflowErrorDict
     ],
     ZeroDivisionError: [
         '零不能作为被除数',
-        ZeroDivisionErrorDict,
-        ErrorRePattern.ZeroDivisionError_Pattern
+        ZeroDivisionErrorDict
     ],
     AssertionError: [
         '断言语句失败',
-        AssertionErrorDict,
-        ErrorRePattern.AssertionError_Pattern
+        AssertionErrorDict
     ],
     AttributeError: [
         '属性错误',
-        AttributeErrorDict,
-        ErrorRePattern.AttributeError_Pattern
+        AttributeErrorDict
     ],
-    EOFError: ['语句不完整', EOFErrorDict, ErrorRePattern.EOFError_Pattern],
+    EOFError: ['语句不完整', EOFErrorDict],
     EnvironmentError: [
         '操作系统错误',
-        EnvironmentErrorDict,
-        ErrorRePattern.EnvironmentError_Pattern
+        EnvironmentErrorDict
     ],
-    IOError: ['输入/输出错误', IOErrorDict, ErrorRePattern.IOError_Pattern],
-    OSError: ['操作系统错误', OSErrorDict, ErrorRePattern.OSError_Pattern],
+    IOError: ['输入/输出错误', IOErrorDict],
+    OSError: ['操作系统错误', OSErrorDict],
     WindowsError: [
         '系统调用错误',
-        WindowsErrorDict,
-        ErrorRePattern.WindowsError_Pattern
+        WindowsErrorDict
     ],
     ImportError: [
         '导入错误',
-        ImportErrorDict,
-        ErrorRePattern.ImportError_Pattern
+        ImportErrorDict
     ],
     LookupError: [
         '无效数据查询的基类',
-        LookupErrorDict,
-        ErrorRePattern.LookupError_Pattern
+        LookupErrorDict
     ],
-    IndexError: ['索引错误', IndexErrorDict, ErrorRePattern.IndexError_Pattern],
+    IndexError: ['索引错误', IndexErrorDict],
     MemoryError: [
         '内存错误',
-        MemoryErrorDict,
-        ErrorRePattern.MemoryError_Pattern
+        MemoryErrorDict
     ],
     UnboundLocalError: [
         '非绑定错误',
-        UnboundLocalErrorDict,
-        ErrorRePattern.UnboundLocalError_Pattern
+        UnboundLocalErrorDict
     ],
     ReferenceError: [
         '访问错误',
-        ReferenceErrorDict,
-        ErrorRePattern.ReferenceError_Pattern
+        ReferenceErrorDict
     ],
     RuntimeError: [
         '运行错误',
-        RuntimeErrorDict,
-        ErrorRePattern.RuntimeError_Pattern
+        RuntimeErrorDict
     ],
     NotImplementedError: [
         '尚未实现的方法',
-        NotImplementedErrorDict,
-        ErrorRePattern.NotImplementedError_Pattern
+        NotImplementedErrorDict
     ],
     IndentationError: [
         '缩进错误',
-        IndentationErrorDict,
-        ErrorRePattern.IndentationError_Pattern
+        IndentationErrorDict
     ],
-    TabError: ['Tab和空格混用', TabErrorDict, ErrorRePattern.TabError_Pattern],
+    TabError: ['Tab和空格混用', TabErrorDict],
     SystemError: [
         '解释器系统错误',
-        SystemErrorDict,
-        ErrorRePattern.SystemError_Pattern
+        SystemErrorDict
     ],
     TypeError: [
         '对类型的无效操作',
-        TypeErrorDict,
-        ErrorRePattern.TypeError_Pattern
+        TypeErrorDict
     ],
-    ValueError: ['参数错误', ValueErrorDict, ErrorRePattern.ValueError_Pattern],
+    ValueError: ['参数错误', ValueErrorDict],
     UnicodeError: [
         'Unicode编码错误',
-        UnicodeErrorDict,
-        ErrorRePattern.UnicodeError_Pattern
+        UnicodeErrorDict
     ],
     UnicodeDecodeError: [
         'Unicode解码错误',
-        UnicodeDecodeErrorDict,
-        ErrorRePattern.UnicodeDecodeError_Pattern
+        UnicodeDecodeErrorDict
     ],
     UnicodeTranslateError: [
         'Unicode转换错误',
-        UnicodeTranslateErrorDict,
-        ErrorRePattern.UnicodeTranslateError_Pattern
+        UnicodeTranslateErrorDict
     ],
-    Warning: ['警告', WarningDict, ErrorRePattern.Warning_Pattern],
+    Warning: ['警告', WarningDict],
     DeprecationWarning: [
         '被弃用特征警告',
-        DeprecationWarningDict,
-        ErrorRePattern.DeprecationWarning_Pattern
+        DeprecationWarningDict
     ],
     FutureWarning: [
         'Unicode编码错误',
-        FutureWarningDict,
-        ErrorRePattern.FutureWarning_Pattern
+        FutureWarningDict
     ],
     OverflowWarning: [
         '长整型转换警告',
-        OverflowWarningDict,
-        ErrorRePattern.OverflowWarning_Pattern
+        OverflowWarningDict
     ],
     PendingDeprecationWarning: [
         '特征弃用警告',
-        PendingDeprecationWarningDict,
-        ErrorRePattern.PendingDeprecationWarning_Pattern
+        PendingDeprecationWarningDict
     ],
     RuntimeWarning: [
         '可疑运行警告',
-        RuntimeWarningDict,
-        ErrorRePattern.RuntimeWarning_Pattern
+        RuntimeWarningDict
     ],
     SyntaxWarning: [
         '可疑语法警告',
-        SyntaxWarningDict,
-        ErrorRePattern.SyntaxWarning_Pattern
+        SyntaxWarningDict
     ],
     UserWarning: [
         '用户代码生成警告',
-        UserWarningDict,
-        ErrorRePattern.UserWarning_Pattern
+        UserWarningDict
     ]
 }
 
 function searchBaseError(errorType) {
-    return TRANSLATION_DICT[errorType] || ['', '', '']
+    return TRANSLATION_DICT[errorType] || ['', '']
 }
 
 
@@ -562,7 +543,6 @@ const SkulptKwArray = [
     'sum',
     'zip',
     'abs',
-    'fabs',
     'ord',
     'chr',
     'hex',
@@ -645,7 +625,7 @@ const addChineseTranslate = function (transData, baseData) {
                 )
             }
         } else if (sign === 'ChineseAttribute') {
-            const sameRate = 0.6
+            const sameRate = 3
             const [errorName, checkObj] = signArray.slice(0, 2)
             const checkArray = checkObj ? Object.keys(checkObj) : []
             const resArray = checkSimilarRate(sameRate, checkArray, errorName)
@@ -679,7 +659,7 @@ function getLineNum(errorData) {
 /*
 检查单次和数组中的单词的相似度
  */
-const checkSimilarRate = function (sameRate, checkArray, baseData) {
+const checkSimilarRate = function (editDistant, checkArray, baseData) {
     const topN = 1
     let tmpArray = []
     checkArray.forEach(function (data) {
@@ -687,10 +667,9 @@ const checkSimilarRate = function (sameRate, checkArray, baseData) {
             data.length - baseData.length < 2 &&
             data.length - baseData.length > -2
         ) {
-            const tmpCount = calculatingSimilarity(data, baseData)
-            const similarity = tmpCount / baseData.length
-            if (similarity > sameRate) {
-                tmpArray.push([similarity, data])
+            const editDistance = calculatingSimilarity(data, baseData)
+            if (editDistant >= editDistance) {
+                tmpArray.push([editDistance, data])
             }
         }
     })
@@ -711,16 +690,45 @@ const checkSimilarRate = function (sameRate, checkArray, baseData) {
  * 从大到小的排序
  * */
 function sortNumber(a, b) {
-    return b[0] - a[0]
+    return -(b[0] - a[0])
 }
 
-const calculatingSimilarity = function (baseData, target) {
-    const dataLength = target.length
-    let tmpCount = 0
-    for (let i = 0; i < dataLength; i++) {
-        tmpCount += baseData.indexOf(target.charAt(i)) !== -1 ? 1 : 0
+/*
+编辑距离
+ */
+function minDistance(s1, s2) {
+    const len1 = s1.length
+    const len2 = s2.length
+
+    let matrix = []
+
+    for (let i = 0; i <= len1; i++) {
+        // 构造二维数组
+        matrix[i] = []
+        for (let j = 0; j <= len2; j++) {
+            // 初始化
+            if (i === 0) {
+                matrix[i][j] = j
+            } else if (j === 0) {
+                matrix[i][j] = i
+            } else {
+                // 进行最小值分析
+                let cost = 0
+                if (s1[i - 1] !== s2[j - 1]) { // 相同为0，不同置1
+                    cost = 1
+                }
+                const temp = matrix[i - 1][j - 1] + cost
+
+                matrix[i][j] = Math.min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1, temp)
+            }
+        }
     }
-    return tmpCount
+    return matrix[len1][len2] //返回右下角的值
+}
+
+
+const calculatingSimilarity = function (baseData, target) {
+    return minDistance(baseData, target)
 }
 
 /*
@@ -790,7 +798,7 @@ function spellChineseError(errorData, lineData) {
  * */
 
 function addBuiltinKwError(transData, kwName, lineData) {
-    const resArray = checkSimilarRate(0.6, SkulptKwArray, kwName)
+    const resArray = checkSimilarRate(3, SkulptKwArray, kwName)
     if (resArray.length > 0) {
         return (
             transData +
@@ -822,7 +830,6 @@ const getAllTransData = function (
     errorContent,
     chineseFlag,
     errorMap,
-    errorType
 ) {
     if (chineseFlag) {
         let errorData = patternMath(errorContent, errorMap)
@@ -857,7 +864,8 @@ const handleStderr = function (error_msg, reduce_row_num) {
     const line_pattern = new RegExp(/.*?, line (?<line>\d+),.*?/i)
 
     let [, , re_data, , error] = error_msg.rsplit(split_data, 4)
-    const tmpData = re_data.match(line_pattern)
+    let tmpData = re_data.match(line_pattern)
+
     // const line_num_tmp = Array.from(re_data.match(line_pattern), m => m.groups ? m.groups.line : m[1])
     if (tmpData) {
         const line_num_tmp = tmpData ? tmpData.groups ? tmpData.groups.line : tmpData[1] : ""
@@ -867,7 +875,11 @@ const handleStderr = function (error_msg, reduce_row_num) {
         // 第二种报错格式
         const line_pattern = new RegExp(/, line (?<line>\d+)/i)
         let [, re_data, , , error] = error_msg.rsplit(split_data, 4)
-        const tmpData = re_data.match(line_pattern)
+        tmpData = re_data.match(line_pattern)
+        if (!tmpData) {
+            [re_data, , , , error] = error_msg.rsplit(split_data, 4)
+            tmpData = re_data.match(line_pattern)
+        }
         if (tmpData) {
             const line_num_tmp = tmpData ? tmpData.groups ? tmpData.groups.line : tmpData[1] : ""
             const lineNum = parseFloat(line_num_tmp) - reduce_row_num
@@ -906,8 +918,114 @@ function handleJavaStderr(error_msg) {
 }
 
 /*
+* 是否为智能纠错
+*
+*
+* */
+const isSmartErrorMsg = function (error_msg) {
+    return error_msg.search("智能纠错") !== -1 && error_msg.search("想输入") !== -1
+}
+
+/*
+add chinese lino nums
+ */
+const addChineseLinoData = function (chineseRet, lino) {
+    if (chineseRet.indexOf("【智能纠错】") !== -1) {
+        let [firstData, otherData] = chineseRet.split("\n", 2)
+        firstData += firstData ? '在第' + lino + '行' : ''
+        const lineNum = getLineNum(firstData)
+        otherData = spellChineseError(otherData, lineNum)
+        chineseRet = firstData + "\n" + otherData
+    } else {
+        chineseRet += chineseRet ? '在第' + lino + '行' : ''
+    }
+    return chineseRet
+}
+
+/* ----------------------------------------------------------------------------------------------------------------------------
+ * sk 错误翻译逻辑。
+ * */
+
+const skErrorTrans = function () {
+    var i, chineseFlag
+    var ret = ''
+    var chineseRet = ''
+    ret += this.tp$name
+    let [resMsg, errorMap] = searchBaseError(this.tp$name)
+    chineseRet += resMsg
+    chineseFlag = chineseRet
+
+    if (this.args) {
+        const errorContent = this.args.v.length > 0 ? this.args.v[0].v : ''
+        ret += ': ' + errorContent
+        chineseRet = getAllTransData(
+            chineseRet,
+            errorContent,
+            chineseFlag,
+            errorMap,
+        )
+    }
+    if (this.traceback.length !== 0) {
+        ret += ' . on line ' + this.traceback[0].lineno + ' .'
+        chineseRet = addChineseLinoData(chineseRet, this.traceback[0].lineno)
+    } else {
+        if (this.args.v.length > 1) {
+            const lineno = this.args.v[1][0]
+            chineseRet = addChineseLinoData(chineseRet, lineno)
+            ret += ' . on line ' + lineno + ' .'
+        } else {
+            ret += ' at <unknown>'
+        }
+    }
+    // ret 为错误信息
+    if (this.args.v.length > 4) {
+        ret += '\n' + this.args.v[4].v
+        for (i = 0; i < this.args.v[3]; ++i) {
+            ret += ' '
+        }
+        ret += '^\n'
+    }
+    ret = ret.trim()
+    ret += '$-$'
+    chineseRet = addChineseTranslate(this.args.v, chineseRet)
+    ret += chineseRet
+
+    return new Sk.builtin.str(ret)
+}
+
+/*
+获取行号与关键词
+ */
+const searchLineno = function (error_msg) {
+    if (isSmartErrorMsg(error_msg)) {
+        const tmpObj = error_msg.match(/第(?<lineno>\d+)行.*?'(?<keyword>.*)'.*?"(?<replaceKeyWord>.*)".*/)
+        if (tmpObj.groups) {
+            return {
+                lineno: tmpObj.groups.lineno,
+                keyword: tmpObj.groups.keyword,
+                replaceKeyWord: tmpObj.groups.replaceKeyWord
+            }
+        }
+    } else if (error_msg.search(/第\d+行/) !== -1) {
+        const tmpObj = error_msg.match(/第(?<lineno>\d+)行/)
+        if (tmpObj.groups) {
+            return {lineno: tmpObj.groups.lineno, keyword: null, replaceKeyWord: null}
+        }
+    } else {
+        error_msg = error_msg.replace(/^"*/, "").replace(/"*$/, "").replace(/↵/g, "\n").trim()
+        let oneLineError = handleStderr(error_msg)
+        const lineno = oneLineError.match(/on line (?<lineno>\d+)/)
+        if (lineno.groups) {
+            return {lineno: lineno.groups.lineno, keyword: null, replaceKeyWord: null}
+        }
+    }
+}
+
+
+/*
 处理标准python的报错信息的接口
  */
+
 const pythonErrorTrans = function (error_msg) {
     // error_msg = error_msg.replace(/^"*(?<data>.*?)"*$/s, "$<data>").replace(/↵/g, "\n")
     error_msg = error_msg.replace(/^"*/, "").replace(/"*$/, "").replace(/↵/g, "\n")
@@ -916,7 +1034,7 @@ const pythonErrorTrans = function (error_msg) {
     oneLineError = oneLineError.indexOf("Error") !== -1 ? oneLineError : handleJavaStderr(error_msg)
     let chineseRet = ''
     let [errorType, ...error] = oneLineError.split(": ")
-    let [resMsg, errorMap, pat] = searchBaseError(errorType)
+    let [resMsg, errorMap] = searchBaseError(errorType)
     let [errorContent, lineData] = error.join(": ").rsplit(", ", 1)
     if (!errorContent) {
         [errorContent, lineData] = error.join(": ").rsplit(" on line", 1)
@@ -947,71 +1065,4 @@ const pythonErrorTrans = function (error_msg) {
     }
     chineseRet = pythonIntelligenceResAdd(error_msg, chineseRet, lineNumRes)
     return chineseRet
-}
-/*
-add chinese lino nums
- */
-const addChineseLinoData = function (chineseRet, lino) {
-    if (chineseRet.indexOf("【智能纠错】") !== -1) {
-        let [firstData, otherData] = chineseRet.split("\n", 2)
-        firstData += firstData ? '在第' + lino + '行' : ''
-        const lineNum = getLineNum(firstData)
-        otherData = spellChineseError(otherData, lineNum)
-        chineseRet = firstData + "\n" + otherData
-    } else {
-        chineseRet += chineseRet ? '在第' + lino + '行' : ''
-    }
-    return chineseRet
-}
-
-/*
- * sk 错误翻译逻辑。
- * */
-
-let skErrorTrans = function () {
-    var i, chineseFlag
-    var ret = ''
-    var chineseRet = ''
-    ret += this.tp$name
-    let [resMsg, errorMap, pat] = searchBaseError(this.tp$name)
-    chineseRet += resMsg
-    chineseFlag = chineseRet
-
-    if (this.args) {
-        const errorContent = this.args.v.length > 0 ? this.args.v[0].v : ''
-        ret += ': ' + errorContent
-        chineseRet = getAllTransData(
-            chineseRet,
-            errorContent,
-            chineseFlag,
-            errorMap,
-            pat
-        )
-    }
-    if (this.traceback.length !== 0) {
-        ret += ' . on line ' + this.traceback[0].lineno + ' .'
-        chineseRet = addChineseLinoData(chineseRet, this.traceback[0].lineno)
-    } else {
-        if (this.args.v.length > 1) {
-            const lineno = this.args.v[1][0]
-            chineseRet = addChineseLinoData(chineseRet, lineno)
-            ret += ' . on line ' + lineno + ' .'
-        } else {
-            ret += ' at <unknown>'
-        }
-    }
-    // ret 为错误信息
-    if (this.args.v.length > 4) {
-        ret += '\n' + this.args.v[4].v
-        for (i = 0; i < this.args.v[3]; ++i) {
-            ret += ' '
-        }
-        ret += '^\n'
-    }
-    ret = ret.trim()
-    ret += '$-$'
-    chineseRet = addChineseTranslate(this.args.v, chineseRet)
-    ret += chineseRet
-
-    return new Sk.builtin.str(ret)
 }

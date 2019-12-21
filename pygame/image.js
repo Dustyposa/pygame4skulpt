@@ -4,7 +4,12 @@ var $builtinmodule = function (name) {
 
         return Sk.misceval.promiseToSuspension(new Promise(function (resolve, reject) {
             var img = new Image();
-            img.src = Sk.imgPath + Sk.ffi.remapToJs(filename);
+            const asset = Sk.ffi.remapToJs(filename);
+            if (Sk.ImageUrlPrefix && !asset.startsWith('http')){
+                    img.src = Sk.ImageUrlPrefix + asset;
+                } else {
+                    img.src = asset;
+                }
             img.onload = function () {
                 var t = Sk.builtin.tuple([img.width, img.height]);
                 var s = Sk.misceval.callsim(PygameLib.SurfaceType, t);
