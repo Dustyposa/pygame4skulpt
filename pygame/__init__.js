@@ -1327,6 +1327,9 @@ var surface$1 = function $Surface$class_outer(gbl, loc) {
     loc.fill = new Sk.builtin.func(function (self, color) {
         var ctx = self.context2d;
         var color_js = PygameLib.extract_color(color);
+        if (color_js !== undefined) {
+            throw Sk.builtin.ValueError("invalid color object");
+        }
         ctx.fillStyle = 'rgba(' + color_js[0] + ', ' + color_js[1] + ', ' + color_js[2] + ', ' + color_js[3] + ')';
         ctx.fillRect(0, 0, self.width, self.height);
     });
