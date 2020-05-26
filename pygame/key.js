@@ -23,7 +23,7 @@ var $builtinmodule = function (name) {
             if (PygameLib.pressedKeys[key])
                 pressed[key] = true;
         }
-        return Sk.ffi.remapToPy(pressed);
+        return Sk.builtin.tuple(pressed);
     });
     mod.get_mods = new Sk.builtin.func(function () {
         var mask = 0;
@@ -43,7 +43,7 @@ var $builtinmodule = function (name) {
                 PygameLib.eventQueue.unshift([PygameLib.constants.KEYDOWN, {key: keyboardModifierKeys[i]}]);
             }
         }
-
+        return Sk.builtin.none.none$;
     });
     mod.name = new Sk.builtin.func(function (idx) {
         var i = Sk.ffi.remapToJs(idx);
