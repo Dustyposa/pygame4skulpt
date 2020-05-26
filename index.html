@@ -2,7 +2,8 @@
 <head>
     <!--    <script src="./skulpt_dist/skulpt.min.js" type="text/javascript"></script>-->
     <meta charset="UTF-8">
-    <script src="./skulpt_dist_min/skulpt.js" type="text/javascript"></script>
+    <!-- <script src="./skulpt_dist_min/skulpt.min.js" type="text/javascript"></script> -->
+   <script src="./skulpt_dist_min/skulpt.js" type="text/javascript"></script>
     <script src="./skulpt_dist_min/skulpt-stdlib.js" type="text/javascript"></script>
     <script src="./skulpt_dist_min/SkErrorThanslation.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
@@ -26,15 +27,18 @@
 </div>
 <div class="col-md-2"></div>
 <div class="col-md-8">
-    <div id="mycanvas"></div>
-    <div class="row">
-        <div class="col-xs-6" id="editorsplace">
-            <div id="editor" style="border: 1px solid black"></div>
+<!--    <div id="sc" style="transform: scale(0.5); width: 800px; height: 600px">-->
+        <div id="mycanvas"></div>
+<!--    </div>-->
+
+        <div class="row">
+            <div class="col-xs-6" id="editorsplace">
+                <div id="editor" style="border: 1px solid black"></div>
+            </div>
+            <div class="col-xs-6">
+                <pre id="output" class="text-left"></pre>
+            </div>
         </div>
-        <div class="col-xs-6">
-            <pre id="output" class="text-left"></pre>
-        </div>
-    </div>
     <div class="col-md-5"></div>
     <a class="btn btn-primary col-md-2" id="runbutton">Run code<span class="glyphicon glyphicon-play"
                                                                      aria-hidden="true"></span></a>
@@ -78,9 +82,14 @@ if 1:
 </script>
 <script>
     $(function () {
-        // const basePath = './pygame_dist/';
+        const basePath = './pygame_dist/';
+        // var sc = document.getElementById("sc");
+        // var sc_context = sc.getContext("2d");
+        // sc.width = 800;
+        // sc.height = 600;
+        // sc_context.scale(0.5, 0.5);
         Sk.builtin.BaseException.prototype.tp$str = skErrorTrans;
-        const basePath = './pygame/';
+        // const basePath = './pygame/';
         const externalLibs = {
             './pygame.js': {
                 path: basePath + '__init__.js',
@@ -241,12 +250,12 @@ if 1:
                     return Sk.misceval.promiseToSuspension(
                         fetch(tmpPath)
                             .then(r => r.text()))
-                // } else if (filename.search(/\w+.py/) !== -1) {
-                //     const tmpList = filename.split("/");
-                //     const domId = tmpList[tmpList.length - 1];
-                //     console.log("domId:", domId);
-                //     const domData = document.getElementById(domId);
-                //     return domData.value;
+                    // } else if (filename.search(/\w+.py/) !== -1) {
+                    //     const tmpList = filename.split("/");
+                    //     const domId = tmpList[tmpList.length - 1];
+                    //     console.log("domId:", domId);
+                    //     const domData = document.getElementById(domId);
+                    //     return domData.value;
                 } else {
                     let request = new XMLHttpRequest();
                     request.open("GET", tmpPath, false);
@@ -342,6 +351,7 @@ if 1:
             Sk.main_canvas = document.createElement("canvas");
             Sk.main_canvas.id = "pygame_main";
             Sk.keepModuleName = true;
+            // Sk.pygameCanvasScale = 1.0;
             Sk.builtin.KeyboardInterrupt = function (args) {
                 var o;
                 if (!(this instanceof Sk.builtin.KeyboardInterrupt)) {
@@ -353,8 +363,14 @@ if 1:
             };
             Sk.abstr.setUpInheritance("KeyboardInterrupt", Sk.builtin.KeyboardInterrupt, Sk.builtin.BaseException);
             Sk.inBrowser = true;
-            const filewrite = function(obj, data){
-                console.log('obj, data:', obj, data)
+            const filewrite = function (obj, data) {
+                // return new Promise(function (resolve, reject) {
+                console.log('obj, data:', obj, data);
+                console.log('ada pos:', obj.pos$);
+                obj.data$ += data;
+                //obj.pos$ += data.length;
+                // resolve(data.length)
+//                  })
             };
             Sk.configure({
                 killableWhile: killWhileAndForBool,
@@ -362,7 +378,8 @@ if 1:
                 __future__: Sk.python3,
                 filewrite: filewrite,
                 read: builtinRead,
-                output: printString
+                output: printString,
+                // pygameCanvasUserWidth: 300
             });
         }
 
@@ -374,6 +391,39 @@ if 1:
             addModal();
             var prog = ace.edit("editor").getValue();
 
+//             prog = `
+// import pygame  # 导入pygame模块
+//
+// pygame.init()  # 初始化
+// white = 255, 255, 255  # 定义颜色
+// blue = 0, 0, 200  # 定义颜色
+// # 初始化游戏屏幕
+// screen = pygame.display.set_mode((600, 500))
+// # 定义正方形参数
+// x, y = 20, 20
+// rect_width = 20
+// # 循环
+// running = True
+// while running:
+//     for event in pygame.event.get():
+//         if event.type == pygame.QUIT:
+//             running = False
+//         if pygame.mouse.get_pressed()[0]:
+//             x, y = pygame.mouse.get_pos()
+//     screen.fill(blue)  # 渲染屏幕背景色
+//     pygame.draw.rect(screen, white, (x, y, rect_width, rect_width))  # 渲染正方形
+//     pygame.time.wait(100)
+//
+//     # x += 10 * 5
+//     # y += 5 * 5
+//     # if x >= 600:
+//     #     x = 20
+//     # if y >= 500:
+//     #     y = 20
+//     pygame.display.update()
+// pygame.quit()
+//
+// `
             let myPromise = Sk.misceval.asyncToPromise(function () {
                 return Sk.importMainWithBody("<stdin>", false, prog, true)
             }, {"*": interruptHandler});

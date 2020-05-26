@@ -22,6 +22,9 @@ var $builtinmodule = function (name) {
         if (flags !== undefined) {
             f = Sk.ffi.remapToJs(flags);
         }
+        if (!Sk.pygameCanvasScaleRate) {
+            Sk.pygameCanvasScaleRate = Sk.pygameCanvasUserWidth / Sk.ffi.remapToJs(size)[0];
+        }
         if (f & PygameLib.constants.FULLSCREEN) {
             mod.surface = Sk.misceval.callsim(PygameLib.SurfaceType, size, true, true);
         } else {

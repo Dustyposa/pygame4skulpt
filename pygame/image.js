@@ -4,7 +4,7 @@ var $builtinmodule = function (name) {
 
         return Sk.misceval.promiseToSuspension(new Promise(function (resolve, reject) {
             var img = new Image();
-            const asset = Sk.ffi.remapToJs(filename);
+            const asset = typeof Sk.TurtleGraphics.assets === "function" ? Sk.TurtleGraphics.assets(Sk.ffi.remapToJs(filename)) : Sk.ffi.remapToJs(filename);
             if (Sk.ImageUrlPrefix && !asset.startsWith('http')){
                     img.src = Sk.ImageUrlPrefix + asset;
                 } else {
@@ -14,7 +14,10 @@ var $builtinmodule = function (name) {
                 var t = Sk.builtin.tuple([img.width, img.height]);
                 var s = Sk.misceval.callsim(PygameLib.SurfaceType, t);
                 var ctx = s.offscreen_canvas.getContext("2d");
+                const tmpRate = 1 / Sk.pygameCanvasScaleRate;
+                ctx.scale(tmpRate, tmpRate);
                 ctx.drawImage(img, 0, 0);
+                // ctx.scale(Sk.pygameCanvasScaleRate, Sk.pygameCanvasScaleRate);
                 resolve(s);
             };
             img.onerror = function () {

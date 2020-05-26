@@ -94,6 +94,7 @@ var createKeyboardEvent = function (event) {
     }
 };
 
+
 function keyEventListener(event) {
     var e = createKeyboardEvent(event);
 
@@ -1104,6 +1105,7 @@ function pygame_init() {
     var mouse_m = Sk.importModule("pygame.mouse", false, false);
     var transform_m = Sk.importModule("pygame.transform", false, false);
     var locals_m = Sk.importModule("pygame.locals", false, false);
+    var sprite_m = Sk.importModule("pygame.sprite", false, false);
 
     PygameLib.initial_time = new Date();
     pygame_m.$d['display'] = display_m.$d['display'];
@@ -1129,21 +1131,23 @@ var mouseEventListener = function (event) {
     const rect = this.getBoundingClientRect();
 
     do {
-        canvasX = event.clientX - rect.left * (this.width / rect.width);
-        canvasY = event.clientY - rect.top * (this.height / rect.height);
+        canvasX = ((typeof event.clientX === "number" ? event.clientX : event.changedTouches[0].clientX) - rect.left * (this.width / rect.width)) / Sk.pygameCanvasScaleRate;
+        canvasY = ((typeof event.clientY === "number" ? event.clientY : event.changedTouches[0].clientY) - rect.top * (this.height / rect.height)) / Sk.pygameCanvasScaleRate;
     }
     while (currentElement === currentElement.offsetParent);
-
-    var button = event.button;
-    if (event.type === "mousedown") {
+    var button = event.button || 0;
+    if (event.type === "mousedown" || event.type === "touchstart") {
         var e = [PygameLib.constants.MOUSEBUTTONDOWN,
             {
                 key: PygameLib.constants.MOUSEBUTTONDOWN,
                 pos: [canvasX, canvasY],
                 button: button + 1
             }];
+        PygameLib.mouseData["pos"] = [canvasX, canvasY];
+        PygameLib.mouseData["rel"] = [event.movementX, event.movementY];
         PygameLib.mouseData["button"][button] = 1;
-    } else if (event.type === "mouseup") {
+        PygameLib.eventQueue.unshift(e);
+    } else if (event.type === "mouseup" || event.type === "touchend") {
         var e = [PygameLib.constants.MOUSEBUTTONUP,
             {
                 key: PygameLib.constants.MOUSEBUTTONUP,
@@ -1151,7 +1155,8 @@ var mouseEventListener = function (event) {
                 button: button + 1
             }];
         PygameLib.mouseData["button"][button] = 0;
-    } else if (event.type === "mousemove") {
+        PygameLib.eventQueue.unshift(e);
+    } else if (event.type === "mousemove" || event.type === "touchmove") {
         var leftButton = 0;
         var rightButton = 0;
         var middleButton = 0;
@@ -1173,8 +1178,8 @@ var mouseEventListener = function (event) {
         }];
         PygameLib.mouseData["pos"] = [canvasX, canvasY];
         PygameLib.mouseData["rel"] = [event.movementX, event.movementY];
+        PygameLib.eventQueue.unshift(e);
     }
-    PygameLib.eventQueue.unshift(e);
 };
 
 // Surface((width, height))
@@ -1187,9 +1192,16 @@ var init$1 = function $__init__123$(self, size, fullscreen = false, main = true)
     main = Sk.ffi.remapToJs(main);
     if (main) {
         self.main_canvas = Sk.main_canvas;
-        self.main_canvas.addEventListener('mousedown', mouseEventListener);
-        self.main_canvas.addEventListener('mouseup', mouseEventListener);
-        self.main_canvas.addEventListener('mousemove', mouseEventListener);
+        if (Sk.pygameCanvasUserWidth) {
+            self.main_canvas.addEventListener('touchstart', mouseEventListener);
+            self.main_canvas.addEventListener('touchend', mouseEventListener);
+            self.main_canvas.addEventListener('touchmove', mouseEventListener);
+        }
+        else {
+            self.main_canvas.addEventListener('mousedown', mouseEventListener);
+            self.main_canvas.addEventListener('mouseup', mouseEventListener);
+            self.main_canvas.addEventListener('mousemove', mouseEventListener);
+        }
         window.addEventListener("keydown", keyEventListener);
         window.addEventListener("keyup", keyEventListener);
 
@@ -1225,6 +1237,7 @@ var init$1 = function $__init__123$(self, size, fullscreen = false, main = true)
     self.main_canvas.setAttribute('width', self.width);
     self.main_canvas.setAttribute('height', self.height);
     self.main_canvas.setAttribute('style', "border: 1px solid darkgray;");
+
     fillBlack(self.main_context, self.main_canvas.width, self.main_canvas.height, main);
     fillBlack(self.context2d, self.width, self.height, main);
 
@@ -1233,6 +1246,7 @@ var init$1 = function $__init__123$(self, size, fullscreen = false, main = true)
 };
 
 function fillBlack(ctx, w, h, main = false) {
+    ctx.scale(Sk.pygameCanvasScaleRate, Sk.pygameCanvasScaleRate);
     ctx.beginPath();
     ctx.rect(0, 0, w, h);
     if (main){
@@ -1240,6 +1254,7 @@ function fillBlack(ctx, w, h, main = false) {
     } else {
         ctx.fillStyle = "rgba(100, 100, 100, 0.0)";
     }
+
     ctx.fill();
 }
 
@@ -1327,7 +1342,8 @@ var surface$1 = function $Surface$class_outer(gbl, loc) {
     loc.fill = new Sk.builtin.func(function (self, color) {
         var ctx = self.context2d;
         var color_js = PygameLib.extract_color(color);
-        if (color_js !== undefined) {
+        //debugger;
+        if (color_js === undefined || color_js.length === undefined || color_js.length < 3) {
             throw Sk.builtin.ValueError("invalid color object");
         }
         ctx.fillStyle = 'rgba(' + color_js[0] + ', ' + color_js[1] + ', ' + color_js[2] + ', ' + color_js[3] + ')';

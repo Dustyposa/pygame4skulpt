@@ -278,8 +278,12 @@ const TypeErrorDict = {
         trans_msg: '%s 的参数必须为字符串，而不是整型。'
     },
     'not supported between instances of': {
-        re_pattern: /'(.*?)' not supported between instances of '(.*?)' and '(.*?)'/i,
-        trans_msg: '%s不支持在%s和%s之间进行比较。'
+        re_pattern: /(.*?)' not supported between instances of '(.*?)' and '(.*?)'/i,
+        trans_msg: '\'%s\'不支持在\'%s\'和\'%s\'之间进行比较。'
+    },
+    'format: a number is required, not ': {
+        re_pattern: /%(.*?) format: a number is required, not (.*)/i,
+        trans_msg: '%%s 格式化: 需要一个数字，而不是 %s。'
     },
 }
 
@@ -287,6 +291,10 @@ const ValueErrorDict = {
     "Number is too large, don't over than 1,000,000": {
         re_pattern: /Number is too( )large, don't over than 1,000,000/i,
         trans_msg: '数值太大了，不能超过 1,000,000。'
+    },
+    "not in default shape, please check shape again!": {
+        re_pattern: /"Shape:'(.*?)' not in default shape, please check shape again!"/i,
+        trans_msg: '形状:\'%s\' 不在默认形状中，请检查形状'
     }
 }
 
