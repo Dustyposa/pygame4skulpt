@@ -154,7 +154,7 @@ function renderFont(self, text, antialias, color, background) {
     var ctx = s.offscreen_canvas.getContext("2d");
     ctx.font = fontName;
     w = ctx.measureText(msg).width;
-    t = Sk.builtin.tuple([w * realFontSize, h * realFontSize * 1.2]);
+    t = Sk.builtin.tuple([w * realFontSize * 1.05, h * realFontSize * 1.2]);
     s = Sk.misceval.callsim(PygameLib.SurfaceType, t, false);
     ctx = s.offscreen_canvas.getContext("2d");
     fontName = fontName.replace(/\d+.*px/g, (realFontSize * h).toFixed(2)+"px");
@@ -172,10 +172,10 @@ function renderFont(self, text, antialias, color, background) {
     ctx.imageSmoothingEnabled = true;
     if (underline) {
         ctx.strokeStyle = 'rgba(' + color_js[0] + ', ' + color_js[1] + ', ' + color_js[2] + ', ' + color_js[3] + ')';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = h * realFontSize / 15;
         ctx.beginPath();
-        ctx.moveTo(0, h - 1);
-        ctx.lineTo(w, h - 1);
+        ctx.moveTo(0, h * realFontSize * 1.2);
+        ctx.lineTo(w, h * realFontSize * 1.2);
         ctx.stroke();
     }
     return s;
