@@ -9,9 +9,9 @@ var $builtinmodule = function (name) {
     });
     mod.get_repeat = new Sk.builtin.func(function () {
         if (PygameLib.repeatKeys) {
-            return Sk.builtin.tuple([1, 1]);
+            return Sk.builtin.tuple(Sk.ffi.remapToPy([1, 1]));
         } else {
-            return Sk.builtin.tuple([0, 0]);
+            return Sk.builtin.tuple(Sk.ffi.remapToPy([0, 0]));
         }
     });
     mod.get_focused = new Sk.builtin.func(function () {
@@ -23,7 +23,7 @@ var $builtinmodule = function (name) {
             if (PygameLib.pressedKeys[key])
                 pressed[key] = true;
         }
-        return Sk.builtin.tuple(pressed);
+        return Sk.builtin.tuple(Sk.ffi.remapToPy(pressed));
     });
     mod.get_mods = new Sk.builtin.func(function () {
         var mask = 0;

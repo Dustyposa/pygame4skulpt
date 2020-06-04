@@ -1,13 +1,13 @@
 var $builtinmodule = function (name) {
     mod = {};
     mod.get_pressed = new Sk.builtin.func(function () {
-        return Sk.builtin.tuple(PygameLib.mouseData["button"]);
+        return new Sk.builtin.tuple(Sk.ffi.remapToPy(PygameLib.mouseData["button"]));
     });
     mod.get_pos = new Sk.builtin.func(function () {
-        return Sk.builtin.tuple(PygameLib.mouseData["pos"]);
+        return new Sk.builtin.tuple(Sk.ffi.remapToPy(PygameLib.mouseData["pos"]));
     });
     mod.get_rel = new Sk.builtin.func(function () {
-        return Sk.builtin.tuple(PygameLib.mouseData["rel"]);
+        return new Sk.builtin.tuple(Sk.ffi.remapToPy(PygameLib.mouseData["rel"]));
     });
     mod.set_pos = new Sk.builtin.func(function (x, y) {
         if (Sk.abstr.typeName(x) === "tuple" && y === undefined) {
